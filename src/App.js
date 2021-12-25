@@ -19,24 +19,24 @@ export default class App extends Component {
   }
 
   render() {
-    const { 
+    /*const {
       loggedIn,
       username
-    } = this.state;
+    } = this.state;*/
 
     return (
       <div className="App">
         { 
-          loggedIn ?
+          //loggedIn ?
           <Chat
-            username1="admin"
-            username2="admin2"
+            currentUser="admin"
+            friendUser="admin2"
           />
-          :
+          /*:
           <InitChat
             onSubmit={this.handleLoginSubmit}
             usernameChangeHandler={this.usernameChangeHandler}
-          />
+          />*/
         }
       </div>
     );

@@ -1,7 +1,5 @@
 class WebSocketService {
   static instance = null;
-  static username1 = null;
-  static username2 = null;
   callbacks = {};
 
   static getInstance() {
@@ -13,10 +11,18 @@ class WebSocketService {
 
   constructor() {
     this.socketRef = null;
+    this.username1 = '';
+    this.username2 = '';
   }
 
-  connect() {
-    const path = 'ws://localhost:8000/ws/chat';
+  connect(currentUser, friendUser) {
+    if (currentUser.localeCompare(friendUser) !== 1) {
+      [this.username1, this.username2] = [currentUser, friendUser]
+    } else {
+      [this.username1, this.username2] = [friendUser, currentUser]
+    }
+
+    const path = 'ws://localhost:8000/ws/chat_' + this.username1 + '_' + this.username2;
     this.socketRef = new WebSocket(path);
     this.socketRef.onopen = () => {
       console.log('WebSocket open');
@@ -29,8 +35,8 @@ class WebSocketService {
       console.log(e.message);
     };
     this.socketRef.onclose = () => {
-      console.log("WebSocket closed let's reopen");
-      this.connect();
+      console.log("WebSocket closed");
+      // this.connect();
     };
   }
 
@@ -48,16 +54,16 @@ class WebSocketService {
     }
   }
 
-  initChatUser(username1, username2) {
-    this.sendMessage({ command: 'init_chat', username1: username1, username2: username2 });
+  initChatUser() {
+    this.sendMessage({ command: 'init_chat', username1: this.username1, username2: this.username2 });
   }
 
-  fetchMessages(username1, username2) {
-    this.sendMessage({ command: 'fetch_messages', username1: username1, username2: username2 });
+  fetchMessages() {
+    this.sendMessage({ command: 'fetch_messages', username1: this.username1, username2: this.username2 });
   }
 
   newChatMessage(message) {
-    this.sendMessage({ command: 'new_message', from: message.from, text: message.text }); 
+    this.sendMessage({ command: 'new_message', from: message.from, text: message.text, username1: this.username1, username2: this.username2 });
   }
 
   addCallbacks(messagesCallback, newMessageCallback) {
