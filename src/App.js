@@ -15,28 +15,28 @@ export default class App extends Component {
 
   handleLoginSubmit = (username) => {
     this.setState({ loggedIn: true, username: username });
-    WebSocketInstance.connect();
+    // WebSocketInstance.connect();
   }
 
   render() {
-    /*const {
+    const {
       loggedIn,
       username
-    } = this.state;*/
+    } = this.state;
 
     return (
       <div className="App">
         { 
-          //loggedIn ?
+          loggedIn ?
           <Chat
-            currentUser="admin"
-            friendUser="admin2"
+            currentUser={ username }
+            friendUser={ username === "admin" ? "admin2" : "admin" }
           />
-          /*:
+          :
           <InitChat
             onSubmit={this.handleLoginSubmit}
             usernameChangeHandler={this.usernameChangeHandler}
-          />*/
+          />
         }
       </div>
     );
